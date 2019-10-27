@@ -1,0 +1,48 @@
+name: podtop
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  morpheus: ^1.2.2+1
+  dio: ^3.0.3
+  provider: ^3.1.0+1
+  rxdart: ^0.22.4
+  hive: ^1.1.1
+  hive_flutter: ^0.2.1
+  flutter:
+    sdk: flutter
+
+  lib_observer:
+    git:
+      url: https://github.com/bicasoftware/lib_observer
+
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  pedantic: ^1.8.0+1  
+
+
+flutter:
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  # assets:
+  #  - images/a_dot_burr.jpeg
+  #  - images/a_dot_ham.jpeg
+ 
+  fonts:
+    - family: Ubuntu
+      fonts:
+        - asset: fonts/Ubuntu-Bold.ttf
+        - asset: fonts/Ubuntu-BoldItalic.ttf
+        - asset: fonts/Ubuntu-Italic.ttf
+        - asset: fonts/Ubuntu-Light.ttf
+        - asset: fonts/Ubuntu-Medium.ttf
+        - asset: fonts/Ubuntu-MediumItalic.ttf
+        - asset: fonts/Ubuntu-Regular.ttf
