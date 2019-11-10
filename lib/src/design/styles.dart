@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-ThemeData lightTheme() {
-  return ThemeData(
-    brightness: Brightness.light,
-    fontFamily: "Ubuntu",
-    primarySwatch: Colors.deepOrange,
-    primaryColor: Colors.deepOrange,
-    accentColor: Colors.lightGreen,
-  );
+class AppThemes {
+  static ThemeData get lightTheme => ThemeData(
+        brightness: Brightness.light,
+        fontFamily: "Ubuntu",
+        primarySwatch: Colors.deepOrange,
+        primaryColor: Colors.deepOrange,
+        accentColor: Colors.lightGreen,
+      );
+
+  static ThemeData get darkTheme => lightTheme.copyWith(brightness: Brightness.dark);
 }

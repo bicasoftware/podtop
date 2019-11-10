@@ -4,17 +4,18 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.6.0-dev.4.0.flutter-1103600280 <3.0.0"
 
 dependencies:
   morpheus: ^1.2.2+1
-  dio: ^3.0.3
   provider: ^3.1.0+1
   rxdart: ^0.22.4
-  hive: ^1.1.1
-  hive_flutter: ^0.2.1
   flutter:
     sdk: flutter
+  http:
+  json_serializable: ^3.2.3
+  moor: ^2.0.1+1
+  moor_flutter: ^2.0.0
 
   lib_observer:
     git:
@@ -25,8 +26,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pedantic: ^1.8.0+1  
-
+  build_runner:
+  moor_generator: ^2.0.1
 
 flutter:
   uses-material-design: true
@@ -35,7 +36,7 @@ flutter:
   # assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
- 
+
   fonts:
     - family: Ubuntu
       fonts:

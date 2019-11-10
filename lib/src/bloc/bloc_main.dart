@@ -1,19 +1,25 @@
+import 'package:flutter/material.dart';
 import 'package:podtop/src/bloc/base_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 class BlocMain with BaseBloc {
-  BlocMain({this.nome}){
-    inNome.add(nome);
+  BlocMain({@required this.isLight}){
+    inBrightness.add(isLight ? Brightness.light : Brightness.dark);
   }
 
-  String nome;
+  bool isLight;
 
-  BehaviorSubject<String> _bhsNome = BehaviorSubject<String>();
-  Stream<String> get outNome => _bhsNome.stream;
-  Sink<String> get inNome => _bhsNome.sink;
+  BehaviorSubject<Brightness> _bhsBrightness = BehaviorSubject<Brightness>();
+  Stream<Brightness> get outBrightness => _bhsBrightness.stream;
+  Sink<Brightness> get inBrightness => _bhsBrightness.sink;
 
   @override
   void dispose() {
-    _bhsNome.close();
+    _bhsBrightness.close();
+  }
+
+  void toggleBrightness(){
+    isLight = !isLight;
+    inBrightness.add(isLight ? Brightness.light : Brightness.dark);
   }
 }

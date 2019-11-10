@@ -73,3 +73,6 @@
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 *.directory
 ios/Flutter/flutter_export_environment.sh
+
+# Remove arquivos part do Dart
+*.g.dart
