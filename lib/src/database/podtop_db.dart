@@ -1,14 +1,21 @@
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:podtop/src/database/daos/dao_appsettings.dart';
+import 'package:podtop/src/database/tables/table_episode.dart';
+import 'package:podtop/src/database/tables/table_podcast.dart';
+import 'package:podtop/src/database/tables/table_settings.dart';
 
-part 'app_settings.g.dart';
+import './daos/dao_episodes.dart';
 
-class AppSettings extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  BoolColumn get isLight => boolean()();
-}
+part 'podtop_db.g.dart';
 
-@UseMoor(tables: [AppSettings], daos: [AppSettingsDao])
+@UseMoor(tables: [
+  AppSettings,
+  TablePodcasts,
+  TableEpisodes,
+], daos: [
+  AppSettingsDao,
+  EpisodesDao,
+])
 class PodTopDB extends _$PodTopDB {
   PodTopDB() : super(FlutterQueryExecutor.inDatabaseFolder(path: 'db.sqlite'));
 

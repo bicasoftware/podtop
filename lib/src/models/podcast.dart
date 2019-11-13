@@ -1,9 +1,15 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+import 'package:podtop/src/database/podtop_db.dart';
 import 'package:podtop/src/models/episode.dart';
 import 'package:xml/xml.dart';
 
+part 'podcast.g.dart';
+
 @immutable
+@JsonSerializable(nullable: false)
 class Podcast {
+  final int id;
   final String title, subtitle, summary, description, rssLink, podcastImg, author, lastBuildDate;
   final List<String> categories;
   final List<Episode> episodes;
@@ -19,10 +25,12 @@ class Podcast {
     @required this.lastBuildDate, //<channel><lastBuildDate>
     @required this.categories, //<channel><itunes:category>[]
     @required this.episodes, //<channel><item>[]
+    this.id,
   });
 
   factory Podcast.empty() {
     return Podcast(
+      id: null,
       title: "",
       subtitle: "",
       summary: "",
@@ -35,6 +43,8 @@ class Podcast {
       episodes: [],
     );
   }
+
+  factory Podcast.fromJson(Map<String, dynamic> json) => _$PodcastFromJson(json);
 
   factory Podcast.fromXML(XmlElement channel) {
     final Iterable<String> categories = channel.findElements('itunes:category').map((XmlElement c) {
@@ -60,6 +70,7 @@ class Podcast {
   }
 
   Podcast copyWith({
+    int id,
     String title,
     String subtitle,
     String summary,
@@ -72,6 +83,7 @@ class Podcast {
     List<Episode> episodes,
   }) {
     return Podcast(
+      id: id ?? this.id,
       title: title ?? this.title,
       subtitle: subtitle ?? this.subtitle,
       summary: summary ?? this.summary,
@@ -82,6 +94,23 @@ class Podcast {
       lastBuildDate: lastBuildDate ?? this.lastBuildDate,
       categories: categories ?? this.categories,
       episodes: episodes ?? this.episodes,
+    );
+  }
+
+  Map<String, dynamic> toJson() => _$PodcastToJson(this);
+
+  TablePodcast asTableEntry() {
+    return TablePodcast(
+      id: null,
+      title: this.title,
+      subtitle: this.subtitle,
+      summary: this.summary,
+      description: this.description,
+      author: this.author,
+      rssLink: this.rssLink,
+      podcastImg: this.podcastImg,
+      lastBuildDate: this.lastBuildDate,
+      categories: this.categories.join(';'),
     );
   }
 }

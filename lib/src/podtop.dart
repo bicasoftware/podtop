@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lib_observer/lib_observer.dart';
 import 'package:podtop/src/bloc/bloc_main.dart';
-import 'package:podtop/src/database/app_settings.dart';
+import 'package:podtop/src/database/podtop_db.dart';
 import 'package:podtop/src/design/styles.dart';
 import 'package:podtop/src/pages/home/home.dart';
 import 'package:podtop/src/splash_screen.dart';

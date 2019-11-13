@@ -1,5 +1,6 @@
 import 'package:moor_flutter/moor_flutter.dart';
-import 'package:podtop/src/database/app_settings.dart';
+import 'package:podtop/src/database/podtop_db.dart';
+import 'package:podtop/src/database/tables/table_settings.dart';
 
 part 'dao_appsettings.g.dart';
 
