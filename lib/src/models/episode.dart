@@ -9,7 +9,8 @@ part 'episode.g.dart';
 @JsonSerializable(nullable: false)
 class Episode {
   final int id, idPodcast;
-  final String title, subtitle, summary, author, duration, mp3Link;
+  final String title, subtitle, summary, author, duration, mp3Link, stopTime;
+  final bool listened;
 
   Episode({
     @required this.title, //<item><title>
@@ -18,6 +19,8 @@ class Episode {
     @required this.author, //<item><author>
     @required this.duration, //<item><itunes:duration>
     @required this.mp3Link, //<item><enclosure url="">
+    this.stopTime = "00:00",
+    this.listened = false,
     this.id,
     this.idPodcast,
   });
@@ -31,6 +34,8 @@ class Episode {
     String author,
     String duration,
     String mp3Link,
+    bool listened,
+    String stopTime,
   }) {
     return Episode(
       id: id ?? this.id,
@@ -41,6 +46,8 @@ class Episode {
       author: author ?? this.author,
       duration: duration ?? this.duration,
       mp3Link: mp3Link ?? this.mp3Link,
+      listened: listened ?? this.listened,
+      stopTime: stopTime ?? this.stopTime,
     );
   }
 
@@ -69,6 +76,8 @@ class Episode {
       author: this.author,
       duration: this.duration,
       mp3Link: this.mp3Link,
+      listened: this.listened,
+      stopTime: this.stopTime,
     );
   }
 }

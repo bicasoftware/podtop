@@ -24,9 +24,9 @@ class _ViewSearchState extends State<ViewSearch> {
 
   doSearch() async {
     if (controller.text.isEmpty) {
-      search = PodcastSearch.empty();
+      setState(() => search = PodcastSearch.empty());
     } else {
-      final result = await searchByTerm(controller.text);
+      final result = await ServiceSearch.searchByTerm(controller.text);
       setState(() => search = result);
     }
   }
