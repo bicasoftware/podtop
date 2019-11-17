@@ -23,8 +23,8 @@ class Podcast {
     @required this.rssLink, //<channel><atom:link> href
     @required this.podcastImg, //<channel><image><url>
     @required this.lastBuildDate, //<channel><lastBuildDate>
-    @required this.categories, //<channel><itunes:category>[]
-    @required this.episodes, //<channel><item>[]
+    this.categories, //<channel><itunes:category>[]
+    this.episodes, //<channel><item>[]
     this.id,
   });
 
@@ -66,6 +66,20 @@ class Podcast {
       lastBuildDate: channel.findElements('lastBuildDate').first.text,
       categories: categories,
       episodes: episodes,
+    );
+  }
+
+  factory Podcast.fromTableData(TablePodcast table) {
+    return Podcast(
+      id: table.id,
+      title: table.title,
+      subtitle: table.subtitle,
+      summary: table.summary,
+      description: table.description,
+      author: table.author,
+      rssLink: table.rssLink,
+      podcastImg: table.podcastImg,
+      lastBuildDate: table.lastBuildDate,
     );
   }
 

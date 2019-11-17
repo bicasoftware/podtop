@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:podtop/src/bloc/bloc_main.dart';
 import 'package:podtop/src/models/podcast_dto.dart';
 import 'package:podtop/src/models/podcast_search_result.dart';
+import 'package:podtop/src/pages/view_search/view_search_item.dart';
 import 'package:podtop/src/services/service_search.dart';
 import 'package:podtop/src/translates.dart';
+import 'package:provider/provider.dart';
 
 class ViewSearch extends StatefulWidget {
   const ViewSearch({Key key}) : super(key: key);
@@ -33,6 +36,8 @@ class _ViewSearchState extends State<ViewSearch> {
 
   @override
   Widget build(BuildContext context) {
+    final b = Provider.of<BlocMain>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(Strings.app_name),
@@ -63,17 +68,14 @@ class _ViewSearchState extends State<ViewSearch> {
                 separatorBuilder: (_, i) => Divider(),
                 itemBuilder: (_, int i) {
                   Result result = search.results[i];
-                  return ListTile(
-                    leading: CircleAvatar(
-                      child: Image.network(result.artworkUrl60),
-                    ),
-                    trailing: Checkbox(
-                      value: false,
-                      tristate: false,
-                      onChanged: (bool s) {},
-                    ),
-                    title: Text(result.artistName ?? ""),
-                    subtitle: Text(result.artistViewUrl ?? ""),
+                  return ViewSearchItem(
+                    result: result,
+                    initialState: false,
+                    onSubscribePressed: () {
+                      b.subscribeOnPodcast(
+                        result.feedUrl,
+                      );
+                    },
                   );
                 },
               ),

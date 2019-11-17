@@ -8,7 +8,7 @@ void main() {
 
   group('chamadas', () {
     test('search itunes', () async {
-      await searchByTerm("braincast").then((PodcastSearch p) {
+      await ServiceSearch.searchByTerm("braincast").then((PodcastSearch p) {
         print(p?.resultCount);
         p?.results?.forEach((Result r) => print(r.artistName));
       });

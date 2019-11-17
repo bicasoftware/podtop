@@ -1,6 +1,7 @@
-import 'package:podtop/src/models/podcast_dto.dart';
-import 'package:podtop/src/extensions/http_ext.dart';
 import 'package:http/http.dart' as http;
+import 'package:podtop/src/extensions/http_ext.dart';
+import 'package:podtop/src/models/podcast_dto.dart';
+import 'package:podtop/src/parsers/parser_podcast_feed.dart';
 
 void main() {
   ServiceSearch.searchByTerm("mupoca").then((r) {
@@ -41,6 +42,15 @@ class ServiceSearch {
       print("wasnModified");
     } else if (r.statusCode == 400 || r.statusCode == 401) {
       print("Falha ao conectar");
+    }
+  }
+
+  static Future getPodcastXMLFeed(String podcastLink) async {
+    final r = await http.get(podcastLink);
+    if (r.statusCode == 200) {
+      if (r.body.isNotEmpty) {
+        return ParserPodcastFeed.parseXMLFeed(r.body);
+      }
     }
   }
 }

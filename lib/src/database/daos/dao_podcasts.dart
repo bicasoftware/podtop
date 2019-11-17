@@ -10,7 +10,10 @@ part 'dao_podcasts.g.dart';
 class PodcastsDao extends DatabaseAccessor<PodTopDB> with _$PodcastsDaoMixin {
   PodcastsDao(PodTopDB db) : super(db);
 
-  Future<List<TablePodcast>> get listAllPodcasts => select(tablePodcasts).get();
+  Future<List<Podcast>> get listAllPodcasts async {
+    final List<TablePodcast> dt = await select(tablePodcasts).get();
+    return dt.map((TablePodcast podcast) => Podcast.fromTableData(podcast)).toList();
+  }
 
   Future<Podcast> appendPodcast(Podcast podcast) async {
     final int p = await into(tablePodcasts).insert(podcast.asTableEntry());
@@ -22,5 +25,9 @@ class PodcastsDao extends DatabaseAccessor<PodTopDB> with _$PodcastsDaoMixin {
     });
 
     return podcast.copyWith(id: p);
+  }
+
+  Future removePodcast(int podcastId) async {
+    delete(tablePodcasts).where((p) => p.id.equals(podcastId));
   }
 }
