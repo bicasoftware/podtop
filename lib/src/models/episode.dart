@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:podtop/src/database/podtop_db.dart';
 import 'package:xml/xml.dart';
+import 'package:podtop/src/extensions/xml_ext.dart';
 
 part 'episode.g.dart';
 
@@ -54,20 +55,55 @@ class Episode {
   factory Episode.fromJson(Map<String, dynamic> json) => _$EpisodeFromJson(json);
 
   factory Episode.fromXML(XmlElement xml) {
+    try {
+      return Episode(
+        title: xml.findSafeElement('title')?.text ?? "",
+        subtitle: xml.findSafeElement('itunes:subtitle')?.text ?? "",
+        summary: xml.findSafeElement('itunes:summary')?.text ?? "",
+        author: xml.findSafeElement('itunes:author')?.text ?? "",
+        duration: xml.findSafeElement('itunes:duration')?.text ?? "--:--:--",
+        mp3Link: xml.findSafeElement('enclosure').getAttribute('url'),
+      );
+    } catch (e) {
+      print("falha ao carregar episodio ${xml.findSafeElement('title').text}");
+      return Episode.empty();
+    }
+  }
+
+  factory Episode.empty() {
     return Episode(
-      title: xml.findElements('title').first.text,
-      subtitle: xml.findElements('itunes:subtitle').first.text,
-      summary: xml.findElements('itunes:summary').first.text,
-      author: xml.findElements('itunes:author').first.text,
-      duration: xml.findSafeElement('itunes:duration')?.text ?? "--:--:--",
-      mp3Link: xml.findElements('enclosure').first.getAttribute('url'),
+      id: -1,
+      idPodcast: -1,
+      title: "",
+      subtitle: "",
+      summary: "",
+      author: "",
+      duration: "",
+      mp3Link: "",
+      listened: false,
+      stopTime: "",
     );
   }
 
   Map<String, dynamic> toJson() => _$EpisodeToJson(this);
 
-  TableEpisode asTableEntry(int idPodcast) {
-    return TableEpisode(
+  factory Episode.fromTableData(TbEpisode episode) {
+    return Episode(
+      id: episode.id,
+      idPodcast: episode.idPodcast,
+      title: episode.title,
+      subtitle: episode.subtitle,
+      summary: episode.summary,
+      author: episode.author,
+      duration: episode.duration,
+      mp3Link: episode.mp3Link,
+      listened: episode.listened,
+      stopTime: episode.stopTime,
+    );
+  }
+
+  TbEpisode asTableEntry(int idPodcast) {
+    return TbEpisode(
       id: null,
       idPodcast: idPodcast,
       title: this.title,
@@ -79,15 +115,5 @@ class Episode {
       listened: this.listened,
       stopTime: this.stopTime,
     );
-  }
-}
-
-extension XmlExtension on XmlElement {
-  XmlElement findSafeElement(String tagName) {
-    if (this.findElements(tagName).length > 0) {
-      return this.findElements(tagName).first;
-    } else {
-      return null;
-    }
   }
 }

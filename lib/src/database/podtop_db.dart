@@ -11,15 +11,16 @@ part 'podtop_db.g.dart';
 
 @UseMoor(tables: [
   AppSettings,
-  TablePodcasts,
-  TableEpisodes,
+  TbPodcasts,
+  TbEpisodes,
 ], daos: [
   AppSettingsDao,
   EpisodesDao,
   PodcastsDao,
 ])
 class PodTopDB extends _$PodTopDB {
-  PodTopDB() : super(FlutterQueryExecutor.inDatabaseFolder(path: 'db.sqlite'));
+  PodTopDB()
+      : super(FlutterQueryExecutor.inDatabaseFolder(path: 'db2.sqlite', singleInstance: true));
 
   @override
   int get schemaVersion => 1;

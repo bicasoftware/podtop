@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 import 'package:podtop/src/database/podtop_db.dart';
 import 'package:podtop/src/models/episode.dart';
 import 'package:xml/xml.dart';
+import 'package:podtop/src/extensions/xml_ext.dart';
 
 part 'podcast.g.dart';
 
@@ -47,29 +48,36 @@ class Podcast {
   factory Podcast.fromJson(Map<String, dynamic> json) => _$PodcastFromJson(json);
 
   factory Podcast.fromXML(XmlElement channel) {
-    final Iterable<String> categories = channel.findElements('itunes:category').map((XmlElement c) {
-      return c.getAttribute('text');
-    }).toList();
+    try {
+      final Iterable<String> categories =
+          channel.findElements('itunes:category').map((XmlElement c) {
+        return c.getAttribute('text');
+      }).toList();
 
-    final List<Episode> episodes = channel.findElements('item').map((item) {
-      return Episode.fromXML(item);
-    }).toList();
+      final List<Episode> episodes = channel.findElements('item').map((item) {
+        return Episode.fromXML(item);
+      }).toList();
 
-    return Podcast(
-      title: channel.findElements('title').first.text,
-      subtitle: channel.findElements('itunes:subtitle').first.text,
-      summary: channel.findElements('itunes:summary').first.text,
-      description: channel.findElements('description').first.text,
-      author: channel.findElements('itunes:author').first.text,
-      rssLink: channel.findElements('atom:link').first.getAttribute("href").toString(),
-      podcastImg: channel.findElements('image').first.findElements('url').first.text,
-      lastBuildDate: channel.findElements('lastBuildDate').first.text,
-      categories: categories,
-      episodes: episodes,
-    );
+      return Podcast(
+        title: channel.findSafeElement('title')?.text ?? "",
+        subtitle: channel.findSafeElement('itunes:subtitle')?.text ?? "",
+        summary: channel.findSafeElement('itunes:summary')?.text ?? "",
+        description: channel.findSafeElement('description')?.text ?? "",
+        author: channel.findSafeElement('itunes:author')?.text ?? "",
+        rssLink: channel.findSafeElement('atom:link').getAttribute("href").toString(),
+        podcastImg: channel.findSafeElement('image').findSafeElement('url').text,
+        lastBuildDate: "",
+        // lastBuildDate: channel.findSafeElement('lastBuildDate').text,
+        categories: categories,
+        episodes: episodes,
+      );
+    } catch (e) {
+      print("falha ao carregar podcast: ${channel.findSafeElement('title')}");
+      return Podcast.empty();
+    }
   }
 
-  factory Podcast.fromTableData(TablePodcast table) {
+  factory Podcast.fromTableData(TbPodcast table) {
     return Podcast(
       id: table.id,
       title: table.title,
@@ -113,8 +121,8 @@ class Podcast {
 
   Map<String, dynamic> toJson() => _$PodcastToJson(this);
 
-  TablePodcast asTableEntry() {
-    return TablePodcast(
+  TbPodcast asTableEntry() {
+    return TbPodcast(
       id: null,
       title: this.title,
       subtitle: this.subtitle,

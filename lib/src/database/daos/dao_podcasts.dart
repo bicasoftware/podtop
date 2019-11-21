@@ -6,17 +6,24 @@ import 'package:podtop/src/models/podcast.dart';
 
 part 'dao_podcasts.g.dart';
 
-@UseDao(tables: [TablePodcasts])
+@UseDao(tables: [TbPodcasts])
 class PodcastsDao extends DatabaseAccessor<PodTopDB> with _$PodcastsDaoMixin {
   PodcastsDao(PodTopDB db) : super(db);
 
   Future<List<Podcast>> get listAllPodcasts async {
-    final List<TablePodcast> dt = await select(tablePodcasts).get();
-    return dt.map((TablePodcast podcast) => Podcast.fromTableData(podcast)).toList();
+    final List<TbPodcast> dt = await select(tbPodcasts).get();
+    var podcasts = dt.map((TbPodcast podcast) => Podcast.fromTableData(podcast)).toList();
+
+    for(Podcast pod in podcasts) {
+      final ep = await PodTopDB().episodesDao.listEpisodesByPodcast(pod.id);
+      pod = pod.copyWith(episodes : ep);
+    }
+
+    return podcasts;
   }
 
   Future<Podcast> appendPodcast(Podcast podcast) async {
-    final int p = await into(tablePodcasts).insert(podcast.asTableEntry());
+    final int p = await into(tbPodcasts).insert(podcast.asTableEntry());
     await transaction(() async {
       podcast.episodes.forEach((Episode ep) async {
         final int epId = await db.episodesDao.appendSingle(p, ep);
@@ -28,6 +35,7 @@ class PodcastsDao extends DatabaseAccessor<PodTopDB> with _$PodcastsDaoMixin {
   }
 
   Future removePodcast(int podcastId) async {
-    delete(tablePodcasts).where((p) => p.id.equals(podcastId));
+    delete(tbPodcasts).where((p) => p.id.equals(podcastId));
+    await PodTopDB().episodesDao.removeEpisodesByPodcastId(podcastId);
   }
 }

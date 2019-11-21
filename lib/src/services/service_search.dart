@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:podtop/src/extensions/http_ext.dart';
+import 'package:podtop/src/models/podcast.dart';
 import 'package:podtop/src/models/podcast_dto.dart';
 import 'package:podtop/src/parsers/parser_podcast_feed.dart';
 
@@ -45,12 +46,13 @@ class ServiceSearch {
     }
   }
 
-  static Future getPodcastXMLFeed(String podcastLink) async {
+  static Future<Podcast> getPodcastXMLFeed(String podcastLink) async {
     final r = await http.get(podcastLink);
     if (r.statusCode == 200) {
       if (r.body.isNotEmpty) {
         return ParserPodcastFeed.parseXMLFeed(r.body);
       }
     }
+    return Podcast.empty();
   }
 }

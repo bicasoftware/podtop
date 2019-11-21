@@ -1,6 +1,6 @@
 import 'package:moor_flutter/moor_flutter.dart';
 
-class TableEpisodes extends Table {
+class TbEpisodes extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get idPodcast => integer()();
   TextColumn get title => text()();
