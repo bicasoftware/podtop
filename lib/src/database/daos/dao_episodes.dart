@@ -26,6 +26,6 @@ class EpisodesDao extends DatabaseAccessor<PodTopDB> with _$EpisodesDaoMixin {
   }
 
   Future removeEpisodesByPodcastId(int podcastId) async {
-    return delete(tbEpisodes).where((e) => e.idPodcast.equals(podcastId));
+    return (delete(tbEpisodes)..where((e) => e.idPodcast.equals(podcastId))).go();
   }
 }
