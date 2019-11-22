@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lib_observer/lib_observer.dart';
 import 'package:podtop/src/bloc/bloc_main.dart';
+import 'package:podtop/src/models/episode.dart';
 import 'package:podtop/src/translates.dart';
 import 'package:provider/provider.dart';
 
@@ -29,8 +30,26 @@ class ViewNovos extends StatelessWidget {
         ],
       ),
       body: Container(
-        color: Colors.pink,
-        child: Text("Novos Podcasts"),
+        child: Column(
+          children: <Widget>[
+            StreamObserver<List<Episode>>(
+              stream: b.outEpisodes,
+              onSuccess: (_, List<Episode> episodes) => ListView.separated(
+                shrinkWrap: true,
+                itemCount: episodes.length,
+                separatorBuilder: (_, i) => Divider(),
+                itemBuilder: (_, int i) {
+                  final episode = episodes[i];
+                  return ListTile(
+                    leading: Icon(Icons.audiotrack),
+                    title: Text(episode.title),
+                    trailing: Icon(Icons.play_arrow),
+                  );
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

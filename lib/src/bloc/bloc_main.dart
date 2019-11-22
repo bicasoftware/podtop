@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:podtop/src/bloc/base_bloc.dart';
 import 'package:podtop/src/bloc/state_main.dart';
 import 'package:podtop/src/database/podtop_db.dart';
+import 'package:podtop/src/models/episode.dart';
 import 'package:podtop/src/models/podcast.dart';
 import 'package:podtop/src/services/service_search.dart';
 import 'package:rxdart/rxdart.dart';
@@ -10,6 +11,14 @@ class BlocMain with BaseBloc {
   BlocMain({@required this.state}) {
     inBrightness.add(state.isLight ? Brightness.light : Brightness.dark);
     inPodcasts.add(state.podcasts);
+
+    _bhsPodcasts?.stream?.listen((List<Podcast> podcasts) {
+      outEpisodes = Observable.just(podcasts)
+          .map((pod) => pod.map((p) => p.episodes))
+          .expand((p) => p)
+          .map((List<Episode> ep) => ep)
+          .take(20);
+    });
   }
 
   StateMain state;
@@ -21,6 +30,8 @@ class BlocMain with BaseBloc {
   BehaviorSubject<List<Podcast>> _bhsPodcasts = BehaviorSubject<List<Podcast>>();
   Stream<List<Podcast>> get outPodcasts => _bhsPodcasts.stream;
   Sink<List<Podcast>> get inPodcasts => _bhsPodcasts.sink;
+
+  Stream<List<Episode>> outEpisodes;
 
   @override
   void dispose() {
@@ -44,7 +55,7 @@ class BlocMain with BaseBloc {
   }
 
   Future unsubscribeOnPodcast(int idPodcast) async {
-    await PodTopDB().podcastsDao.removePodcast(idPodcast);    
+    await PodTopDB().podcastsDao.removePodcast(idPodcast);
     inPodcasts.add(state.removePodcast(idPodcast));
   }
 }

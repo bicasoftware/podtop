@@ -22,7 +22,10 @@ class StateMain {
       ..podcasts = state;
   }
 
-  Brightness toogleIsLight() => isLight ? Brightness.light : Brightness.dark;
+  Brightness toogleIsLight() {
+    isLight  = !isLight;
+    return isLight ? Brightness.light : Brightness.dark;
+  }
 
   void addPodcast(Podcast pod) {
     podcasts.add(pod);
